@@ -1,0 +1,84 @@
+#include <stdio.h>
+
+// Функція для введення масиву
+void inputArray(int arr[], int n, int *valid) {
+    printf("Введіть %d цілих чисел для масиву: ", n);
+    for (int i = 0; i < n; i++) {
+        if (scanf("%d", &arr[i]) != 1 || arr[i] <= 0) {
+            printf("Помилка: введено неправильне число. Спробуйте ще раз.\n");
+            while (getchar() != '\n'); // Очищення буфера
+            *valid = 0; // Встановлення флагу невалідності
+            return;
+        }
+    }
+    *valid = 1; // Встановлення флагу валідності
+}
+
+int countIncreasingSequences(int arr[], int n) {
+    int count = 0;
+
+    // Вказівник на поточний елемент і наступні два елементи
+    int *current = arr;
+    int *next1 = arr + 1;
+    int *next2 = arr + 2;
+
+    // Ітерація масиву до третього останнього елемента
+    while (next2 - arr < n) {
+        // Перевірити, чи поточні три елементи в порядку зростання
+        if (*current < *next1 && *next1 < *next2) {
+            count++;
+
+            // Перемістіть вказівники, щоб пропустити поточну послідовність
+            current++;
+            next1++;
+            next2++;
+        } else {
+            // Перевірка, чи зростають тільки два підряд елементи
+            if (*current < *next1 || *next1 < *next2) {
+                return 0; // Повернути 0, якщо знайдено лише 2 зростаючих підряд елемента
+            }
+            // Перемістіть вказівники на наступну позицію
+            current++;
+            next1++;
+            next2++;
+        }
+    }
+
+    return count;
+}
+
+int main() {
+    int n;
+    int choice;
+    do {
+        // Відображення меню
+        printf("\nМеню:\n");
+        printf("1. Почати\n");
+        printf("2. Вийти\n");
+        printf("Введіть ваш вибір: ");
+        if (scanf("%d", &choice) != 1 || choice < 1 || choice > 2) {
+            printf("Помилка введення. Введіть число від 1 до 2.\n");
+            while (getchar() != '\n'); // Очищення буфера
+            continue;
+        }
+
+        if (choice == 1) {
+            printf("Введіть розмір масиву: ");
+            if (scanf("%d", &n) != 1 || n <= 0) {
+                printf("Помилка введення. Введіть ціле число.\n"); 
+                while (getchar() != '\n'); // Очищення буфера
+                continue;
+            }
+
+            int arr[n];
+            int valid;
+            inputArray(arr, n, &valid); // Виклик функції для введення масиву
+            if(valid) {
+                int result = countIncreasingSequences(arr, n);
+                printf("Кількість ділянок = %d\n", result);
+            }
+        }
+    } while(choice != 2);   
+
+    return 0;
+}

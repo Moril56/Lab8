@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// Функція для ініціалізації масиву випадковими числами
+void initializeArray(int arr[], int size) {
+    srand(time(NULL));
+    for (int i = 0; i < size; i++) {
+        arr[i] = rand() % 201 - 100; // генеруємо випадкове число в діапазоні [-100, 100]
+    }
+}
+
+// Функція для обчислення суми від'ємних елементів масиву
+int sumOfNegatives(int arr[], int size) {
+    int sum = 0;
+    for (int i = 0; i < size; i++) {
+        if (arr[i] < 0) {
+            sum += arr[i];
+        }
+    }
+    return sum;
+}
+
+// Функція для знаходження максимального і мінімального елементів масиву та їхніх індексів
+void findMinMaxIndexes(int arr[], int size, int *maxIndex, int *minIndex) {
+    int max = arr[0];
+    int min = arr[0];
+    *maxIndex = 0;
+    *minIndex = 0;
+    for (int i = 1; i < size; i++) {
+        if (arr[i] > max) {
+            max = arr[i];
+            *maxIndex = i;
+        }
+        if (arr[i] < min) {
+            min = arr[i];
+            *minIndex = i;
+        }
+    }
+}
+
+// Функція для обчислення добутку елементів масиву між максимальним і мінімальним елементами
+int productBetweenMinMax(int arr[], int size, int maxIndex, int minIndex) {
+    int product = 1;
+    int start, end;
+
+    if (maxIndex < minIndex) {
+        start = maxIndex + 1;
+        end = minIndex;
+    } else {
+        start = minIndex + 1;
+        end = maxIndex;
+    }
+
+    for (int i = start; i < end; i++) {
+        product *= arr[i];
+    }
+    return product;
+}
+
+// Функція для виведення масиву на екран
+void printArray(int arr[], int size) {
+    printf("Масив: [");
+    for (int i = 0; i < size; i++) {
+        printf("%d", arr[i]);
+        if (i < size - 1) {
+            printf(", ");
+        }
+    }
+    printf("]\n");
+}
+
+int main() {
+    int size;
+    int choice;
+    do{
+        // Відображення меню
+        printf("\nМеню:\n");
+        printf("1. Почати\n");
+        printf("2. Вийти\n");
+        printf("Введіть ваш вибір: ");
+        if (scanf("%d", &choice) != 1 || choice < 1 || choice > 2) {
+           printf ("Помилка введення. Введіть число від 1 до 2");
+           while (getchar() != '\n');
+        continue;
+     }
+
+
+    if (choice == 1) {
+    printf("Введіть розмір масиву: ");
+    if (scanf("%d", &size) != 1 || size <= 0){
+        printf("Некоректний розмір масиву.\n");
+        while (getchar() != '\n');
+    continue;
+    }
+
+    int array[size];
+
+      initializeArray(array, size);
+      printf("\nІніціалізований ");
+      printArray(array, size);
+
+    int sum = sumOfNegatives(array, size);
+       printf("\nСума від'ємних елементів: %d\n", sum);
+
+       int maxIndex, minIndex;
+       findMinMaxIndexes(array, size, &maxIndex, &minIndex);
+       int product = productBetweenMinMax(array, size, maxIndex, minIndex);
+       printf("\nДобуток елементів між максимальним і мінімальним: %d\n", product);
+       while ((getchar()) != '\n'); // Очищення буфера
+       continue; // перехід до наступного проходження циклу
+    }
+
+    } while(choice != 2);
+
+    return 0;
+}
